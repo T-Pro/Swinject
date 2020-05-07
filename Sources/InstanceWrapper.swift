@@ -16,6 +16,7 @@ public final class Lazy<Service>: InstanceWrapper {
     private let factory: () -> Any?
     private let graphIdentifier: GraphIdentifier?
     private weak var container: Container?
+    private(set) var initialized: Bool = false
 
     init?(inContainer container: Container, withInstanceFactory factory: (() -> Any?)?) {
         guard let factory = factory else { return nil }
@@ -24,7 +25,11 @@ public final class Lazy<Service>: InstanceWrapper {
         self.container = container
     }
 
-    private var _instance: Service?
+    private var _instance: Service? {
+        didSet {
+            initialized = _instance != nil
+        }
+    }
 
     /// Getter for the wrapped object.
     /// It will be resolved from the `Container` when first accessed, all other calls will return the same instance.

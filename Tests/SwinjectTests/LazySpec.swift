@@ -104,5 +104,18 @@ class LazySpec: QuickSpec {
                 expect(employee?.instance.employer).notTo(beNil())
             }
         }
+        describe("Initialized flag") {
+            it("provides instance from container") {
+                container.register(Animal.self) { _ in Dog() }
+                let lazy = container.resolve(Lazy<Animal>.self)
+                expect(lazy?.instance is Dog).to(beTrue())
+                expect(lazy?.initialized).to(beTrue())
+            }
+            it("provides instance from container but not initialized") {
+                container.register(Animal.self) { _ in Dog() }
+                let lazy = container.resolve(Lazy<Animal>.self)
+                expect(lazy?.initialized).to(beFalse())
+            }
+        }
     }
 }
