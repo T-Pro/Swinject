@@ -16,7 +16,7 @@ public final class Lazy<Service>: InstanceWrapper {
     private let factory: () -> Any?
     private let graphIdentifier: GraphIdentifier?
     private weak var container: Container?
-    private(set) var initialized: Bool = false
+    private(set) public var initialized: Bool = false
 
     init?(inContainer container: Container, withInstanceFactory factory: (() -> Any?)?) {
         guard let factory = factory else { return nil }
