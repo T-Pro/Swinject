@@ -5,17 +5,19 @@
 Swinject
 ========
 
-[![Travis CI](https://travis-ci.org/Swinject/Swinject.svg?branch=master)](https://travis-ci.org/Swinject/Swinject)
+![Github Actions](https://github.com/1ucas/Swinject/actions/workflows/Project%20Testing.yml/badge.svg?branch=master)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods Version](https://img.shields.io/cocoapods/v/Swinject.svg?style=flat)](http://cocoapods.org/pods/Swinject)
 [![License](https://img.shields.io/cocoapods/l/Swinject.svg?style=flat)](http://cocoapods.org/pods/Swinject)
 [![Platforms](https://img.shields.io/badge/platform-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS%20%7C%20Linux-lightgrey.svg)](http://cocoapods.org/pods/Swinject)
-[![Swift Version](https://img.shields.io/badge/Swift-2.2--3.1.x-F16D39.svg?style=flat)](https://developer.apple.com/swift)
+[![Swift Version](https://img.shields.io/badge/Swift-4.2--5.4-F16D39.svg?style=flat)](https://developer.apple.com/swift)
 [![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 Swinject is a lightweight [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection) framework for Swift.
 
 Dependency injection (DI) is a software design pattern that implements Inversion of Control (IoC) for resolving dependencies. In the pattern, Swinject helps your app split into loosely-coupled components, which can be developed, tested and maintained more easily. Swinject is powered by the Swift generic type system and first class functions to define dependencies of your app simply and fluently.
+
+Swinject is maintained by the [Faire Wholesale Inc.](https://github.com/Faire?view_as=public) mobile platform team.
 
 ## Features
 
@@ -40,31 +42,19 @@ Dependency injection (DI) is a software design pattern that implements Inversion
 
 ## Requirements
 
-- iOS 8.0+ / Mac OS X 10.10+ / watchOS 2.0+ / tvOS 9.0+
-- Swift 2.2 or 2.3
-  - Xcode 7.0+
-- Swift 3
-  - Xcode 8.0+
-- Swift 3.2, 4.x
-  - Xcode 9.0+
+- iOS 11.0+ / Mac OS X 10.13+ / watchOS 4.0+ / tvOS 11.0+
+- Xcode 14.3+
+- Swift 4.2+
 - Carthage 0.18+ (if you use)
 - CocoaPods 1.1.1+ (if you use)
 
 ## Installation
 
-Swinject is available through [Carthage](https://github.com/Carthage/Carthage) or [CocoaPods](https://cocoapods.org).
+Swinject is available through [Carthage](https://github.com/Carthage/Carthage), [CocoaPods](https://cocoapods.org), or [Swift Package Manager](https://swift.org/package-manager/).
 
 ### Carthage
 
 To install Swinject with Carthage, add the following line to your `Cartfile`.
-
-#### Swift 2.2 or 2.3
-
-```
-github "Swinject/Swinject" ~> 1.1.4
-```
-
-#### Swift 3.x or 4.x
 
 ```
 github "Swinject/Swinject"
@@ -80,21 +70,9 @@ Then run `carthage update --no-use-binaries` command or just `carthage update`. 
 
 To install Swinject with CocoaPods, add the following lines to your `Podfile`.
 
-#### Swift 2.2 or 2.3
-
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '8.0' # or platform :osx, '10.10' if your target is OS X.
-use_frameworks!
-
-pod 'Swinject', '~> 1.1.4'
-```
-
-#### Swift 3.x
-
-```ruby
-source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '8.0' # or platform :osx, '10.10' if your target is OS X.
+platform :ios, '11.0' # or platform :osx, '10.13' if your target is OS X.
 use_frameworks!
 
 pod 'Swinject'
@@ -104,6 +82,25 @@ pod 'Swinject'
 ```
 
 Then run `pod install` command. For details of the installation and usage of CocoaPods, visit [its official website](https://cocoapods.org).
+
+### Swift Package Manager
+
+in `Package.swift` add the following:
+
+```swift
+dependencies: [
+    // Dependencies declare other packages that this package depends on.
+    // .package(url: /* package url */, from: "1.0.0"),
+    .package(url: "https://github.com/Swinject/Swinject.git", from: "2.8.0")
+],
+targets: [
+    .target(
+        name: "MyProject",
+        dependencies: [..., "Swinject"]
+    )
+    ...
+]
+```
 
 ## Documentation
 
@@ -182,10 +179,9 @@ class PersonViewController: UIViewController {
 
 ### With SwinjectStoryboard
 
-Import SwinjectStoryboard at the top of your swift source file if you use Swinject v2 in Swift 3.
+Import SwinjectStoryboard at the top of your swift source file.
 
 ```swift
-// Only Swinject v2 in Swift 3.
 import SwinjectStoryboard
 ```
 
@@ -255,16 +251,18 @@ To run the playground in the project, first build the project, then select `Edit
 
 ## Example Apps
 
-- [SwinjectSimpleExample](https://github.com/Swinject/SwinjectSimpleExample) demonstrates dependency injection and Swinject in a simple weather app that lists current weather information at some locations.
-- [SwinjectMVVMExample](https://github.com/Swinject/SwinjectMVVMExample) demonstrates dependency injection with Swift and reactive programming with [ReactiveCocoa](https://github.com/ReactiveCocoa/ReactiveCocoa) in MVVM architecture.
+Some example apps using Swinject can be found on [GitHub](https://github.com/search?o=desc&q=swinject&s=updated&type=Repositories).
 
 ## Blog Posts
 
-The following blog posts introduce Swinject and the concept of dependency injection.
+The following blog posts introduce the concept of dependency injection and Swinject.
 
-- [Dependency Injection Framework for Swift - Introduction to Swinject](https://yoichitgy.github.io/post/dependency-injection-framework-for-swift-introduction-to-swinject/)
-- [Dependency Injection Framework for Swift - Simple Weather App Example with Swinject Part 1/2](https://yoichitgy.github.io/post/dependency-injection-framework-for-swift-simple-weather-app-example-with-swinject-part-1/)
-- [Dependency Injection Framework for Swift - Simple Weather App Example with Swinject Part 2/2](https://yoichitgy.github.io/post/dependency-injection-framework-for-swift-simple-weather-app-example-with-swinject-part-2/)
+- [Dependency Injection Tutorial for iOS: Getting Started](https://www.raywenderlich.com/14223279-dependency-injection-tutorial-for-ios-getting-started) *by [Irina Galata](https://www.raywenderlich.com/u/galata)*
+- [Swinject Tutorial for iOS: Getting Started](https://www.raywenderlich.com/17-swinject-tutorial-for-ios-getting-started) *by [Gemma Barlow](https://www.raywenderlich.com/u/gemmakbarlow)*
+- [iOS Dependency Injection Using Swinject](https://medium.com/flawless-app-stories/ios-dependency-injection-using-swinject-9c4ceff99e41) *by [Ali Akhtar](https://ali-akhtar.medium.com)*
+- [DI in iOS: Complete guide](https://medium.com/its-tinkoff/di-in-ios-complete-guide-cd76a079d2d) *by [Vitaly Batrakov](https://medium.com/@batrakov.vitaly)*
+
+Thanks the authors!
 
 ## Contribution Guide
 
@@ -272,7 +270,6 @@ A guide to [submit issues](https://github.com/Swinject/Swinject/issues), to ask 
 
 ## Question?
 
-- [Slack](https://join.slack.com/t/swinject/shared_invite/enQtNjk0NjE0NjMzOTIyLTI5NWJiNDU5NGI1MTUwZDI3MDU2ZTM2YTMwMWRhMjI0ZmFlODk4MDI5OWUwNzY1YjlhOTRjYWM2NjZmOTVhNTU) feel free to discuss anything Swinject related.
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/swinject) we are trying to monitor questions tagged `swinject`
 
 ## Credits
@@ -284,8 +281,8 @@ The DI container features of Swinject are inspired by:
 
 and highly inspired by:
 
-- [Funq](http://funq.codeplex.com) - [Daniel Cazzulino](http://www.codeplex.com/site/users/view/dcazzulino) and [the project team](http://funq.codeplex.com/team/view).
+- [Funq](https://github.com/kzu/funq) - [Daniel Cazzulino](https://github.com/kzu).
 
 ## License
 
-MIT license. See the [LICENSE file](LICENSE.txt) for details.
+MIT license. See the [LICENSE file](LICENSE) for details.
