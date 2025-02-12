@@ -5,18 +5,23 @@ options:
   indentWidth: 4
   tabWidth: 4
   deploymentTarget:
-    macOS: '10.10'
-    tvOS: '9.0'
-    iOS: '8.0'
-    watchOS: '2.0'
+    macOS: '10.13'
+    tvOS: '12.0'
+    iOS: '12.0'
+    watchOS: '4.0'
+    visionOS: '1.0'
+fileGroups:
+  - Playgrounds/Sample-iOS.playground
 targets:
   Swinject:
     type: framework
-    platform: [macOS, iOS, tvOS, watchOS]
+    platform: [macOS, iOS, tvOS, watchOS, visionOS]
     platformSuffix: -${platform}
     settings:
       base:
         APPLICATION_EXTENSION_API_ONLY: 'YES'
+        BUILD_LIBRARY_FOR_DISTRIBUTION: 'YES'
+        RUN_DOCUMENTATION_COMPILER: 'YES'
     scheme:
       testTargets:
         - SwinjectTests-${platform}
@@ -25,7 +30,11 @@ targets:
         excludes: ["*.erb"]
     postCompileScripts:
       - script: >
-          if which swiftlint >/dev/null; then
+          if [[ "$(uname -m)" == arm64 ]]; then
+              export PATH="/opt/homebrew/bin:$PATH"
+          fi
+
+          if which swiftlint > /dev/null; then
             swiftlint
           else
             echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
@@ -33,12 +42,10 @@ targets:
         name: Swiftlint
   SwinjectTests:
     type: bundle.unit-test
-    platform: [macOS, iOS, tvOS, watchOS]
+    platform: [macOS, iOS, tvOS, watchOS, visionOS]
     platformSuffix: -${platform}
     scheme: {}
     sources:
       - Tests/SwinjectTests
     dependencies:
       - target: Swinject-${platform}
-      - carthage: Quick
-      - carthage: Nimble
