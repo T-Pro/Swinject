@@ -20,7 +20,7 @@ import Foundation
 /// where `A` and `X` are protocols, `B` is a type conforming `A`, and `Y` is a type conforming `X`
 /// and depending on `A`.
 public final class Container {
-    internal var services = [ServiceKey: ServiceEntryProtocol]()
+    internal var services = ThreadSafeDictionary<ServiceKey, ServiceEntryProtocol>()
     private let parent: Container? // Used by HierarchyObjectScope
     private var resolutionDepth = 0
     private let debugHelper: DebugHelper
@@ -97,7 +97,42 @@ public final class Container {
     public func resetObjectScope(_ objectScope: ObjectScope) {
         resetObjectScope(objectScope as ObjectScopeProtocol)
     }
+    /// Discards instances for a given service registered in the given `ObjectsScopeProtocol`.
+    ///
+    /// **Example usage:**
+    ///     container.resetObjectScope(ObjectScope.container, MyService.Type)
+    ///
+    /// - Parameters:
+    ///     - objectScope: instances registered in given `ObjectsScopeProtocol`
+    ///     - serviceType: and with given serviceType  will be discarded.
+    public func resetObjectScope(_ objectScope: ObjectScopeProtocol, serviceType: Any.Type) {
+        syncIfEnabled {
+            let matchingServices = services.keys
+                .filter { $0.serviceType == serviceType }
+                .compactMap { services[$0] }
 
+            if matchingServices.isEmpty { return }
+
+            matchingServices
+                .filter { $0.objectScope === objectScope }
+                .forEach { $0.storage.instance = nil }
+
+            parent?.resetObjectScope(objectScope, serviceType: serviceType)
+        }
+    }
+    /// Discards instances for  a given service registered in the given `ObjectsScope`. It performs the same operation
+    /// as `resetObjectScope(_:ObjectScopeProtocol, serviceType: Any.Type)`,
+    /// but provides more convenient usage syntax.
+    ///
+    /// **Example usage:**
+    ///     container.resetObjectScope(.container, servieType: MyService.self)
+    ///
+    /// - Parameters:
+    ///     - objectScope:  Instances registered in given `ObjectsScope`
+    ///     - serviceType:  and with given serviceType will be discarded.
+    public func resetObjectScope(_ objectScope: ObjectScope, serviceType: Any.Type) {
+        resetObjectScope(objectScope as ObjectScopeProtocol, serviceType: serviceType)
+    }
     /// Adds a registration for the specified service with the factory closure to specify how the service is
     /// resolved with dependencies.
     ///
@@ -297,7 +332,7 @@ extension Container: _Resolver {
 
     fileprivate func getRegistrations() -> [ServiceKey: ServiceEntryProtocol] {
         var registrations = parent?.getRegistrations() ?? [:]
-        services.forEach { key, value in registrations[key] = value }
+        services.forEachRead { key, value in registrations[key] = value }
         return registrations
     }
 
@@ -424,5 +459,8 @@ extension Container: CustomStringConvertible {
 // MARK: Constants
 
 private extension Container {
-    static let graphIdentifierKey = ServiceKey(serviceType: GraphIdentifier.self, argumentsType: Resolver.self)
+    static let graphIdentifierKey: ServiceKey = {
+        let key = ServiceKey(serviceType: GraphIdentifier.self, argumentsType: Resolver.self)
+        return key
+    }()
 }

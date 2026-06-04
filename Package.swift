@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version:6.0.0
 
 import PackageDescription
 
@@ -13,9 +13,6 @@ let package = Package(
     ],
     products: [
         .library(name: "Swinject",
-                 targets: ["Swinject"]),
-        .library(name: "Swinject-Dynamic",
-                 type: .dynamic,
                  targets: ["Swinject"]),
     ],
     targets: [
